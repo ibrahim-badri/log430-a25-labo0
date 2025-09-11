@@ -22,7 +22,7 @@ jobs:
           pip install pytest
 
       - name: Lancer les tests unitaires
-        working-directory: src
-        run: | 
+        run: |
+          cd src 
           python3 -m pytest 
 
