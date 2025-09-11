@@ -79,7 +79,7 @@ Test division with valid non-zero denominator.
 Args:
     calculator (Calculator): Fixture providing a Calculator instance.
 """
-def test_division_ok(calculator):
+def test_division_pass(calculator):
     assert calculator.division(100, 2) == 50
     assert calculator.last_result == 50
     
@@ -88,12 +88,12 @@ def test_division_ok(calculator):
 Test division by zero according to the current implementation.
 
 Note:
-    The code does not raise an exception. It returns the string.
+    The code does not raise an exception. It returns the string suggesting an error.
 
 Args:
     calculator (Calculator): Fixture providing a Calculator instance.
 """
-def test_division_by_zero_contract(calculator):
+def test_division_by_zero_pass(calculator):
     ret = calculator.division(1, 0)
     assert ret == "Erreur : division par zéro"
     assert calculator.last_result == "Error"
@@ -107,7 +107,8 @@ Note:
 
 Args:
     calculator (Calculator): Fixture providing a Calculator instance.
-"""
+    
 def test_division_by_zero_should_raise(calculator):
     with pytest.raises(ZeroDivisionError):
-        calculator.division(1, 0)
+    calculator.division(1, 0)  
+"""
