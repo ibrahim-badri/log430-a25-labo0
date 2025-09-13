@@ -38,7 +38,7 @@ jobs:
         run: |
           # Non-interactive SSH; disables host key prompt for streamlined and autonomous deployment.
           # sshpass ensure to read parameters from the environment variables.
-          sshpass -e ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" \
+          SSHPASS='SSH_PASSWORD' sshpass -e ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" \
             "$USERNAME@$HOST" "
               # Exit on errors, unset variables or failed pipes.
               set -euo pipefail
