@@ -1,0 +1,75 @@
+# =========================================================
+# Workflow: Continuous Deployment (CD)
+# Purpose: Deploy the project to a remote VM once the CI
+#          workflow (“CI”) finishes successfully.
+# Location: .github/workflows/workflow_run-deploy-to-vm.yml
+# Author: Ibrahim Badri
+# Date: 2025-10-12
+# Version: 1.0
+# =========================================================
+
+name: CD
+
+# This workflow is triggered only after the CI workflow (push_pr-build-tests.yml) has completed.
+on:
+  workflow_run:
+    workflows: ["CI"]        # Must match the 'name:' in push_pr-build-tests.yml
+    types:
+      - completed            # State must be completed
+
+jobs:
+  deploy:
+    # Deployment is ran only if the CI workflow concluded successfully
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1 — Install sshpass to enable non-interactive SSH with a password, or password-based SSH without manual interaction
+      - name: Install SSH non-interactive password authentication utility
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      # Step 2 — Initialiazing a remote connection to the virtual machine and deploy the latest main branch.
+      - name: Deploy application to remote virtual machine (VM)
+        env:
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}     # SSH password stored as a GitHub Secret
+          USERNAME: ${{ secrets.USERNAME }}             # SSH username
+          HOST: ${{ secrets.HOST }}                     # Virtual Machine host or IP address
+          SSH_PORT: ${{ secrets.SSH_PORT }}             # SSH port
+        run: |
+          # Non-interactive SSH; disables host key prompt for streamlined and autonomous deployment.
+          # sshpass ensure to read parameters from the environment variables.
+          sshpass -e ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" \
+            "$USERNAME@$HOST" "
+              # Exit on errors, unset variables or failed pipes.
+              set -euo pipefail
+
+              # Determining repository folder name from GitHub context.
+              REPO_NAME=\$(basename ${{ github.repository }})
+
+              cd ~
+              # Cloning repository if it does not already exist.
+              if [ ! -d \"\$REPO_NAME\" ]; then
+                git clone https://github.com/${{ github.repository }}.git
+              fi
+
+              # Update code to the latest main branch by 
+              cd \"\$REPO_NAME\"
+              # Syncing remote changes and remove stale references
+              git fetch --all --prune
+              # Ensure repositoriy points to the deployment branch
+              git checkout main
+              # Pulling fast-forward (ff) to the latest commit avoiding merge commits.
+              git pull --ff-only
+
+              # Containerized deployment:
+              # - Rebuild to ensure latest layers (no cache suits coursework; tune for prod).
+              # - Up in detached mode and remove orphans to maintain a clean runtime set.
+              docker-compose build --no-cache
+              docker-compose up -d --remove-orphans
+
+              # Reclaim disk space in constrained lab environments.
+              docker image prune -f
+
+              # Emit a concise post-deploy status for operator visibility.
+              docker-compose ps
+            "
