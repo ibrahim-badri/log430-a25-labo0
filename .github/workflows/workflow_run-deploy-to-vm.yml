@@ -65,11 +65,11 @@ jobs:
           # Containerized deployment:
           # - Rebuild to ensure latest layers (no cache suits coursework; tune for prod).
           # - Up in detached mode and remove orphans to maintain a clean runtime set.
-          docker-compose build --no-cache
-          docker-compose up -d --remove-orphans
+          docker compose build --no-cache
+          docker compose up -d --remove-orphans
 
           # Reclaim disk space in constrained lab environments.
           docker image prune -f
 
           # Emit a concise post-deploy status for operator visibility.
-          docker-compose ps
+          docker compose ps
