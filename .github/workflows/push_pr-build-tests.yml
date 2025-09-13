@@ -1,26 +1,42 @@
+# Display name of the workflow shown in the GitHub Actions interface.
 name: CI
 
+# Triggers: run this workflow for every push or pull request to any branch.
 on: [push, pull_request]
 
 jobs:
   build:
+    # Use the latest available GitHub-hosted Ubuntu Linux runner.
     runs-on: ubuntu-latest
 
     steps:
+
+      # Step 1: Download the repository content into the runner’s workspace
+      # so later steps can access the source code using the checkout action.
       - name: Repository checkout
         uses: actions/checkout@v3
 
+      # Step 2: Set up a specific Python runtime on the runner using the setup-python action.
       - name: Install Python
         uses: actions/setup-python@v4
         with:
+      # Request Python 3.11 to ensure a consistent environment.
           python-version: '3.11'
 
+      # Step 3: Upgrade pip to its latest version to avoid
+      # known bugs or incompatibilities. Install all project dependencies listed
+      # in requirements.txt so the code and tests can run.
+      # Explicitly install pytest, the test runner,
+      # guaranteeing it is available even if not listed in requirements.
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
 
+      # Step 4: Change directory to src where the test files reside,
+      # ensuring pytest runs from the correct project root. Discover and execute all unit tests, 
+      # producing a non-zero exit code if any test fails, which will cause the job (and workflow) to fail.
       - name: Launch unit tests
         run: |
           cd src 
