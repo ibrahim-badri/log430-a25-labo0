@@ -30,33 +30,35 @@ jobs:
 
       # Step 2 — Initialiazing a remote connection to the virtual machine and deploy the latest main branch.
       - name: Deploy application to remote virtual machine (VM)
+        shell: bash 
         env:
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}     # SSH password stored as a GitHub Secret
           USERNAME: ${{ secrets.USERNAME }}             # SSH username
           HOST: ${{ secrets.HOST }}                     # Virtual Machine host or IP address
           SSH_PORT: ${{ secrets.SSH_PORT }}             # SSH port
+          GITHUB_REPOSITORY: ${{ github.repository }}   # GitHub repository in the format "owner/repo"             
         run: |
           # Non-interactive SSH; disables host key prompt for streamlined and autonomous deployment.
           # sshpass ensure to read parameters from the environment variables.
-          SSHPASS='SSH_PASSWORD' sshpass -e ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" \
+          SSHPASS="$SSH_PASSWORD" sshpass -e ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" \
             "$USERNAME@$HOST" "
               # Exit on errors, unset variables or failed pipes.
               set -euo pipefail
 
               # Determining repository folder name from GitHub context.
-              REPO_NAME=\$(basename ${{ github.repository }})
+              REPOSITORY_NAME=\$(basename \"$GITHUB_REPOSITORY\")
 
               cd ~
               # Cloning repository if it does not already exist.
-              if [ ! -d \"\$REPO_NAME\" ]; then
-                git clone https://github.com/${{ github.repository }}.git
+              if [ ! -d \"\$REPOSITORY_NAME\" ]; then
+                git clone https://github.com/$GITHUB_REPOSITORY.git \"\$REPOSITORY_NAME\"
               fi
 
               # Update code to the latest main branch by 
-              cd \"\$REPO_NAME\"
+              cd \"\$REPOSITORY_NAME\"
               # Syncing remote changes and remove stale references
               git fetch --all --prune
-              # Ensure repositoriy points to the deployment branch
+              # Ensure repository points to the deployment branch
               git checkout main
               # Pulling fast-forward (ff) to the latest commit avoiding merge commits.
               git pull --ff-only
