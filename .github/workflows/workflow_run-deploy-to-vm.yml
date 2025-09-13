@@ -21,57 +21,55 @@ jobs:
   deploy:
     # Deployment is ran only if the CI workflow concluded successfully
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
+    # Self-hosted runner with its associated tags.
+    runs-on: [self-hosted, Linux, X64]    
 
     steps:
       # Step 1 — Install sshpass to enable non-interactive SSH with a password, or password-based SSH without manual interaction.
-      - name: Install SSH non-interactive password authentication utility
-        run: sudo apt-get update && sudo apt-get install -y sshpass
+      # (No longer required for self-hosted deployment but kept as comment for reference)
+      # - name: Install SSH non-interactive password authentication utility
+      #   run: sudo apt-get update && sudo apt-get install -y sshpass
 
       # Step 2 — Initialiazing a remote connection to the virtual machine and deploy the latest main branch.
       - name: Deploy application to remote virtual machine (VM)
         shell: bash 
         env:
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}     # SSH password stored as a GitHub Secret.
-          USERNAME: ${{ secrets.USERNAME }}             # SSH username.
-          HOST: ${{ secrets.HOST }}                     # Virtual Machine host or IP address.
-          SSH_PORT: ${{ secrets.SSH_PORT }}             # SSH port.
           GITHUB_REPOSITORY: ${{ github.repository }}   # GitHub repository in the format "owner/repo".            
         run: |
           # Non-interactive SSH; disables host key prompt for streamlined and autonomous deployment.
           # sshpass ensure to read parameters from the environment variables.
-          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" \
-            "$USERNAME@$HOST" "
-              # Exit on errors, unset variables or failed pipes.
-              set -euo pipefail
+          # (SSH no longer needed because this job runs directly on the VM)
 
-              # Determining repository folder name from GitHub context.
-              REPOSITORY_NAME=\$(basename \"$GITHUB_REPOSITORY\")
+          # Exit on errors, unset variables or failed pipes.
+          set -euo pipefail
 
-              cd ~
-              # Cloning repository if it does not already exist.
-              if [ ! -d \"\$REPOSITORY_NAME\" ]; then
-                git clone https://github.com/$GITHUB_REPOSITORY.git \"\$REPOSITORY_NAME\"
-              fi
+          # Determining repository folder name from GitHub context.
+          REPOSITORY_NAME=$(basename "$GITHUB_REPOSITORY")
 
-              # Update code to the latest main branch. 
-              cd \"\$REPOSITORY_NAME\"
-              # Syncing remote changes and remove stale references.
-              git fetch --all --prune
-              # Ensure repository points to the deployment branch.
-              git checkout main
-              # Pulling fast-forward (ff) to the latest commit avoiding merge commits.
-              git pull --ff-only
+          cd ~
 
-              # Containerized deployment:
-              # - Rebuild to ensure latest layers (no cache suits coursework; tune for prod).
-              # - Up in detached mode and remove orphans to maintain a clean runtime set.
-              docker-compose build --no-cache
-              docker-compose up -d --remove-orphans
+          # Cloning repository if it does not already exist.
+          if [ ! -d "$REPOSITORY_NAME" ]; then
+            git clone https://github.com/$GITHUB_REPOSITORY.git "$REPOSITORY_NAME"
+          fi
 
-              # Reclaim disk space in constrained lab environments.
-              docker image prune -f
+          # Update code to the latest main branch. 
+          cd "$REPOSITORY_NAME"
+          # Syncing remote changes and remove stale references.
+          git fetch --all --prune
+          # Ensure repository points to the deployment branch.
+          git checkout main
+          # Pulling fast-forward (ff) to the latest commit avoiding merge commits.
+          git pull --ff-only
 
-              # Emit a concise post-deploy status for operator visibility.
-              docker-compose ps
-            "
+          # Containerized deployment:
+          # - Rebuild to ensure latest layers (no cache suits coursework; tune for prod).
+          # - Up in detached mode and remove orphans to maintain a clean runtime set.
+          docker-compose build --no-cache
+          docker-compose up -d --remove-orphans
+
+          # Reclaim disk space in constrained lab environments.
+          docker image prune -f
+
+          # Emit a concise post-deploy status for operator visibility.
+          docker-compose ps
