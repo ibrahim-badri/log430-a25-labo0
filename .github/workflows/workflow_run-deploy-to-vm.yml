@@ -15,7 +15,7 @@ on:
   workflow_run:
     workflows: ["CI"]        # Must match the 'name:' in push_pr-build-tests.yml
     types:
-      - completed            # State must be completed
+      - completed            # State must be completed.
 
 jobs:
   deploy:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1 — Install sshpass to enable non-interactive SSH with a password, or password-based SSH without manual interaction
+      # Step 1 — Install sshpass to enable non-interactive SSH with a password, or password-based SSH without manual interaction.
       - name: Install SSH non-interactive password authentication utility
         run: sudo apt-get update && sudo apt-get install -y sshpass
 
@@ -32,11 +32,11 @@ jobs:
       - name: Deploy application to remote virtual machine (VM)
         shell: bash 
         env:
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}     # SSH password stored as a GitHub Secret
-          USERNAME: ${{ secrets.USERNAME }}             # SSH username
-          HOST: ${{ secrets.HOST }}                     # Virtual Machine host or IP address
-          SSH_PORT: ${{ secrets.SSH_PORT }}             # SSH port
-          GITHUB_REPOSITORY: ${{ github.repository }}   # GitHub repository in the format "owner/repo"             
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}     # SSH password stored as a GitHub Secret.
+          USERNAME: ${{ secrets.USERNAME }}             # SSH username.
+          HOST: ${{ secrets.HOST }}                     # Virtual Machine host or IP address.
+          SSH_PORT: ${{ secrets.SSH_PORT }}             # SSH port.
+          GITHUB_REPOSITORY: ${{ github.repository }}   # GitHub repository in the format "owner/repo".            
         run: |
           # Non-interactive SSH; disables host key prompt for streamlined and autonomous deployment.
           # sshpass ensure to read parameters from the environment variables.
@@ -54,11 +54,11 @@ jobs:
                 git clone https://github.com/$GITHUB_REPOSITORY.git \"\$REPOSITORY_NAME\"
               fi
 
-              # Update code to the latest main branch by 
+              # Update code to the latest main branch. 
               cd \"\$REPOSITORY_NAME\"
-              # Syncing remote changes and remove stale references
+              # Syncing remote changes and remove stale references.
               git fetch --all --prune
-              # Ensure repository points to the deployment branch
+              # Ensure repository points to the deployment branch.
               git checkout main
               # Pulling fast-forward (ff) to the latest commit avoiding merge commits.
               git pull --ff-only
