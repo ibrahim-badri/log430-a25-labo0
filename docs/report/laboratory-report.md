@@ -1,69 +1,131 @@
-<div align="center">
+<!-- Gabarit de rapport de laboratoire conçu pour le cours de LOG430 Architecture logicielle -->
+<!-- Authored by Ibrahim Badri on 2025-10-15 -->
 
+<!-- Page de présentation -->
+<div>
+
+<!-- Titre du document (18 pts) -->
+<center>
 <h1 style="font-size:18pt;">
 Laboratoire 0 : Infrastructure (Git, Docker, CI/CD)
 </h1>
+<center>
 
+<!-- 4 retours à interligne simple (18 pts) -->
+<br>
+<br>
+<br>
 <br>
 
+<!-- (16 pts) -->
+<center>
 <h2 style="font-size:16pt;">
 PAR
 </h2>
+<center>
 
+<!-- 2 retours à interligne simple (16 pts) -->
+<br>
 <br>
 
+<!-- Prénom et NOM DE FAMILLE, CODE PERMANENT (16 pts) -->
+<center>
 <h2 style="font-size:16pt;">
 Ibrahim BADRI, BADI02089900
 </h2>
+<center>
 
-<br><br>
+<!-- 6* retours à interligne simple (16 pts) -->
+<!-- * Devrait être 5 retours -->
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
+<!-- Note de présentation (14 pts) -->
+<center>
 <h3 style="font-size:14pt;">
 RAPPORT DE LABORATOIRE PRÉSENTÉ À MONSIEUR FABIO PETRILLO DANS LE CADRE DU COURS <em>ARCHITECTURE LOGICIELLE</em> (LOG430-02)
 </h3>
+<center>
 
-<br><br>
+<!-- 5 retours à interligne simple (14 pts) -->
+<br>
+<br>
+<br>
+<br>
+<br>
 
+<!-- Date de remise (14 pts) -->
+<center>
 <h3 style="font-size:14pt;">
 MONTRÉAL, LE 13 SEPTEMBRE 2025
 </h3>
+<center>
 
+<!-- 5 retours à interligne simple (14 pts) -->
+<br>
+<br>
+<br>
+<br>
 <br>
 
+<!-- Date de présentation (14 pts) -->
+<center>
 <h3 style="font-size:14pt;">
 ÉCOLE DE TECHNOLOGIE SUPÉRIEURE<br>
 UNIVERSITÉ DU QUÉBEC
 </h3>
+<center>
+
+<!-- 5 retours à interligne simple (14 pts) -->
+<br>
+<br>
+<br>
+<br>
+<br>
 
 </div>
 
 ---
-
-### Tables des matières 
-- [Question 1](#question-1)
-- [Question 2](#question-2)
-- [Question 3](#question-3)
-- [Question 4](#question-4)
+<!-- Tables des matières -->
+## **Tables des matières** 
+- [**Tables des matières**](#tables-des-matières)
+  - [**Question 1**](#question-1)
+  - [**Question 2**](#question-2)
+  - [**Question 3**](#question-3)
+  - [**Question 4**](#question-4)
+  
+<!-- 5 retours à interligne simple (14 pts) -->
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ---
-
+<!-- Questionnaire aligné en mode justifié -->
 <div style="text-align: justify;">
 
-#### Question 1
+<!-- Numéro de question -->
+### **Question 1**
 
+<!-- Énoncé de question -->
 > Si l’un des tests échoue à cause d’un _bug_, comment `pytest` signale-t-il l’erreur et aide-t-il à la localiser ? Rédigez un test qui provoque volontairement une erreur, puis montrez la sortie du terminal obtenue.
 
-</div>
-
-<div style="text-align: justify;">
-
+<!-- Réponse à la question -->
 Lorsque l’un des tests échoue à cause d’un _bug_, `pytest` l’indique clairement dans le terminal en affichant le nombre total de tests exécutés, réussis et échoués, puis détaille dans la section `FAILURES` le nom de la fonction de test fautive, le fichier et la ligne exacte où l’erreur s’est produite ainsi que le message explicatif qui s’y applique. Dans le cadre de l’exécution de mon test volontairement faux, on obtient le message `DID NOT RAISE <class ‘ZeroDivisionError’>` qui découle d’une division d’un chiffre par zéro $(0)$. L’échec provient du fait que le code testé renvoie simplement une chaîne de caractères au lieu de lever l’exception attendue, ce qui provoque le décalage entre le contrat du test et le comportement réel de la fonction.
 
-<p style="text-align: center;">
+<!-- Mode d'alignement de la ressource  -->
+<div style="text-align: center;">
+  <!-- Lien vers la ressource et texte de remplacement  -->
   <img src="../assets/test-failure.png" alt="Figure 1">
   <br>
+  <!-- Légende -->
   <em>Figure 1. Résultat de l'exécution d'un test comportant une erreur</em>
-</p>
+</div>
 
 <br>
 
@@ -71,25 +133,25 @@ L’ensemble des tests unitaires couvre les opérations fondamentales de la calc
 Les fonctions de test sont disponibles dans le fichier [`test_calculator.py`](../../src/tests/test_calculator.py
 ). Suite au retrait du test fautif, le succès du test unitaire est également affiché dans le terminal de la façon suivante :
 
-<p style="text-align: center;">
+<div style="text-align: center;">
   <img src="../assets/successful-tests.png" alt="Figure 2">
   <br>
   <em>Figure 2. Résultat de l'exécution des tests exempts d'erreurs</em>
-</p>
+</div>
 
-##### Question 2
+### **Question 2**
 
 > Que fait GitLab (GitHub) pendant les étapes de « _Setup repository_ » et « _Checkout repository_ » ? Veuillez inclure la sortie du terminal Gitlab CI (GitHub Actions) dans votre réponse.
 
-À l’issue des étapes définies dans le fichier de configuration d'intégration continue (CI), nous obtenons dans un premier temps cette sortie qui correspond à la phase d’initialisation _Set up job_ d’un GitHub Actions démarrant d’abord un _runner_ éphémère, à l’échéance une machine virtuelle `Ubuntu 24.04 LTS` en prenant le soin de préciser la version du logiciel et l’image utilisée avec tous les outils préinstallés. Il génère ensuite le `GITHUB_TOKEN` et affiche les permissions associées pour permettre aux étapes du _workflow_ d’interagir en toute sécurité avec le dépôt GitHub. Le système crée ensuite le répertoire de travail temporaire puis télécharge les actions mentionnées dans le fichier de _workflow_ en vérifiant leur intégrité grâce à leurs SHA spécifiques. Une fois ces préparatifs terminés, le job nommé `build` peut démarrer et exécuter les étapes de compilation, de tests ou de déploiement définies.
+À l’issue des étapes définies dans le fichier de configuration d'intégration continue (CI), nous obtenons dans un premier temps cette sortie qui correspond à la phase d’initialisation _Set up job_ d’un GitHub Actions démarrant d’abord un _runner_ éphémère, à l’échéance une machine virtuelle `Ubuntu 24.04 LTS` en prenant le soin de préciser la version du logiciel et l’image utilisée avec tous les outils préinstallés. Il génère ensuite le `GITHUB_TOKEN` et affiche les permissions associées pour permettre aux étapes du _workflow_ d’interagir en toute sécurité avec le dépôt GitHub. Le système crée ensuite le répertoire de travail temporaire puis télécharge les actions mentionnées dans le fichier de _workflow_ en vérifiant leur intégrité grâce à leurs SHA spécifiques. Une fois ces préparatifs terminés, le _job_ nommé `build` peut démarrer et exécuter les étapes de compilation, de tests ou de déploiement définies.
 
 <br>
 
-<p style="text-align: center;">
+<div style="text-align: center;">
   <img src="../assets/setup-repository-job.png" alt="Figure 3">
   <br>
   <em>Figure 3. Résultat de sortie de la première étape du build</em>
-</p>
+</div>
 
 <br>
 
@@ -97,13 +159,13 @@ Dans un second temps, nous obtenons une sortie qui correspond à la deuxième é
 
 <br>
 
-<p style="text-align: center;">
+<div style="text-align: center;">
   <img src="../assets/checkout-repository-job.png" alt="Figure 4">
   <br>
   <em>Figure 4. Résultat de sortie de la deuxième étape du build</em>
-</p>
+</div>
 
-##### Question 3
+### **Question 3**
 
 > Quel approche et quelles commandes avez-vous exécutées pour automatiser le déploiement continu de l'application dans la machine virtuelle ? Veuillez inclure les sorties du terminal et les scripts Bash dans votre réponse.
 
@@ -111,6 +173,7 @@ Pour mettre en place le déploiement continu (CD) de mon application dans la mac
 
 <br>
 
+<!-- Fragement de code avec le language spécifié (YAML) -->
 ```yaml
 name: CI
 
@@ -197,11 +260,11 @@ jobs:
 
  <br>
 
- <p style="text-align: center;">
+ <div style="text-align: center;">
   <img src="../assets/ssh-deploy-failure.png" alt="Figure 5">
   <br>
   <em>Figure 5. Échec du déploiement continu via connexion SSH</em>
-</p>
+</div>
 
  <br>
  
@@ -251,30 +314,27 @@ jobs:
 
 <br>
 
- <p style="text-align: center;">
+ <div style="text-align: center;">
   <img src="../assets/self-hosted-deploy-success.png" alt="Figure 6">
   <br>
   <em>Figure 6. Succès du déploiement continu via auto-hébergement</em>
-</p>
+</div>
 
 <br>
 
 Pour favoriser la simplicité, la rigueur et la modularité du déploiement, il aurait été judicieux d’extraire certaines parties des commandes directement présentes dans les _jobs_ du _workflow_ et de les regrouper dans un ou plusieurs scripts Bash dédiés, appelés ensuite par ces _jobs_.
 
-##### Question 4
+### **Question 4**
 
 >  Quel type d'informations pouvez-vous obtenir via la commande `top` ? Veuillez inclure la sortie du terminal dans votre réponse.
 
-La commande `top` est un outil de surveillance en temps réel qui permet d’évaluer rapidement l’activité d’un système Linux. Son exécution affiche un tableau qui se met à jour régulièrement et fournit, d’un côté, des informations globales sur la machine telles que la charge moyenne du processeur sur une, cinq et quinze minutes, la durée de fonctionnement depuis le dernier démarrage, l'utilisation du _central processing unit_ (CPU) et de la mémoire D'autre part, elle affiche également la liste des processus en cours. Pour chaque processus, `top` indique notamment l’identifiant (PID), l’utilisateur, la priorité, le pourcentage de CPU et de mémoire utilisés, le temps total d’exécution et la commande qui l’a lancé.
+La commande `top` est un outil de surveillance en temps réel qui permet d’évaluer rapidement l’activité d’un système Linux. Son exécution affiche un tableau qui se met à jour régulièrement et fournit, d’un côté, des informations globales sur la machine telles que la charge moyenne du processeur sur une, cinq et quinze minutes, la durée de fonctionnement depuis le dernier démarrage, l'utilisation du _central processing unit_ (CPU) et de la mémoire. D'autre part, elle affiche également la liste des processus en cours. Pour chaque processus, `top` indique notamment l’identifiant (PID), l’utilisateur, la priorité, le pourcentage de CPU et de mémoire utilisés, le temps total d’exécution et la commande qui l’a lancé.
 
 
-<p style="text-align: center;">
+<div style="text-align: center;">
   <img src="../assets/top-command.png" alt="Figure 7">
   <br>
   <em>Figure 7. Résultat de sortie de la commande top</em>
-</p>
-
 </div>
 
-
-
+</div>
