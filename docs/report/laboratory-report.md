@@ -2,14 +2,14 @@
 <!-- Authored by Ibrahim Badri on 2025-10-15 -->
 
 <!-- Page de présentation -->
-<div>
+<div align="center">
 
 <!-- Titre du document (18 pts) -->
 <center>
 <h1 style="font-size:18pt;">
 Laboratoire 0 : Infrastructure (Git, Docker, CI/CD)
 </h1>
-<center>
+</center>
 
 <!-- 4 retours à interligne simple (18 pts) -->
 <br>
@@ -22,7 +22,7 @@ Laboratoire 0 : Infrastructure (Git, Docker, CI/CD)
 <h2 style="font-size:16pt;">
 PAR
 </h2>
-<center>
+</center>
 
 <!-- 2 retours à interligne simple (16 pts) -->
 <br>
@@ -33,7 +33,7 @@ PAR
 <h2 style="font-size:16pt;">
 Ibrahim BADRI, BADI02089900
 </h2>
-<center>
+</center>
 
 <!-- 6* retours à interligne simple (16 pts) -->
 <!-- * Devrait être 5 retours -->
@@ -49,7 +49,7 @@ Ibrahim BADRI, BADI02089900
 <h3 style="font-size:14pt;">
 RAPPORT DE LABORATOIRE PRÉSENTÉ À MONSIEUR FABIO PETRILLO DANS LE CADRE DU COURS <em>ARCHITECTURE LOGICIELLE</em> (LOG430-02)
 </h3>
-<center>
+</center>
 
 <!-- 5 retours à interligne simple (14 pts) -->
 <br>
@@ -63,7 +63,7 @@ RAPPORT DE LABORATOIRE PRÉSENTÉ À MONSIEUR FABIO PETRILLO DANS LE CADRE DU CO
 <h3 style="font-size:14pt;">
 MONTRÉAL, LE 13 SEPTEMBRE 2025
 </h3>
-<center>
+</center>
 
 <!-- 5 retours à interligne simple (14 pts) -->
 <br>
@@ -78,7 +78,7 @@ MONTRÉAL, LE 13 SEPTEMBRE 2025
 ÉCOLE DE TECHNOLOGIE SUPÉRIEURE<br>
 UNIVERSITÉ DU QUÉBEC
 </h3>
-<center>
+</center>
 
 <!-- 5 retours à interligne simple (14 pts) -->
 <br>
@@ -92,7 +92,6 @@ UNIVERSITÉ DU QUÉBEC
 ---
 <!-- Tables des matières -->
 ## **Tables des matières** 
-- [**Tables des matières**](#tables-des-matières)
   - [**Question 1**](#question-1)
   - [**Question 2**](#question-2)
   - [**Question 3**](#question-3)
@@ -106,9 +105,10 @@ UNIVERSITÉ DU QUÉBEC
 <br>
 
 ---
-<!-- Questionnaire aligné en mode justifié -->
-<div style="text-align: justify;">
 
+<!-- Questionnaire aligné en mode justifié -->
+<div align="justify">
+  
 <!-- Numéro de question -->
 ### **Question 1**
 
@@ -119,7 +119,7 @@ UNIVERSITÉ DU QUÉBEC
 Lorsque l’un des tests échoue à cause d’un _bug_, `pytest` l’indique clairement dans le terminal en affichant le nombre total de tests exécutés, réussis et échoués, puis détaille dans la section `FAILURES` le nom de la fonction de test fautive, le fichier et la ligne exacte où l’erreur s’est produite ainsi que le message explicatif qui s’y applique. Dans le cadre de l’exécution de mon test volontairement faux, on obtient le message `DID NOT RAISE <class ‘ZeroDivisionError’>` qui découle d’une division d’un chiffre par zéro $(0)$. L’échec provient du fait que le code testé renvoie simplement une chaîne de caractères au lieu de lever l’exception attendue, ce qui provoque le décalage entre le contrat du test et le comportement réel de la fonction.
 
 <!-- Mode d'alignement de la ressource  -->
-<div style="text-align: center;">
+<div align="center">
   <!-- Lien vers la ressource et texte de remplacement  -->
   <img src="../assets/test-failure.png" alt="Figure 1">
   <br>
@@ -133,7 +133,7 @@ L’ensemble des tests unitaires couvre les opérations fondamentales de la calc
 Les fonctions de test sont disponibles dans le fichier [`test_calculator.py`](../../src/tests/test_calculator.py
 ). Suite au retrait du test fautif, le succès du test unitaire est également affiché dans le terminal de la façon suivante :
 
-<div style="text-align: center;">
+<div align="center">
   <img src="../assets/successful-tests.png" alt="Figure 2">
   <br>
   <em>Figure 2. Résultat de l'exécution des tests exempts d'erreurs</em>
@@ -147,7 +147,7 @@ Les fonctions de test sont disponibles dans le fichier [`test_calculator.py`](..
 
 <br>
 
-<div style="text-align: center;">
+<div align="center">
   <img src="../assets/setup-repository-job.png" alt="Figure 3">
   <br>
   <em>Figure 3. Résultat de sortie de la première étape du build</em>
@@ -159,7 +159,7 @@ Dans un second temps, nous obtenons une sortie qui correspond à la deuxième é
 
 <br>
 
-<div style="text-align: center;">
+<div align="center">
   <img src="../assets/checkout-repository-job.png" alt="Figure 4">
   <br>
   <em>Figure 4. Résultat de sortie de la deuxième étape du build</em>
@@ -260,7 +260,7 @@ jobs:
 
  <br>
 
- <div style="text-align: center;">
+ <div align="center">
   <img src="../assets/ssh-deploy-failure.png" alt="Figure 5">
   <br>
   <em>Figure 5. Échec du déploiement continu via connexion SSH</em>
@@ -308,13 +308,13 @@ jobs:
           docker compose ps
  ```
  
-   <br>
+<br>
  
  Grâce à cette configuration, chaque `push` validé par les tests unitaires entraîne automatiquement la mise à jour du code et le redémarrage propre des conteneurs sur la machine virtuelle. Il s'avère que cette approche à permis le succès du déploiement continu.
 
 <br>
 
- <div style="text-align: center;">
+ <div align="center">
   <img src="../assets/self-hosted-deploy-success.png" alt="Figure 6">
   <br>
   <em>Figure 6. Succès du déploiement continu via auto-hébergement</em>
@@ -331,7 +331,7 @@ Pour favoriser la simplicité, la rigueur et la modularité du déploiement, il 
 La commande `top` est un outil de surveillance en temps réel qui permet d’évaluer rapidement l’activité d’un système Linux. Son exécution affiche un tableau qui se met à jour régulièrement et fournit, d’un côté, des informations globales sur la machine telles que la charge moyenne du processeur sur une, cinq et quinze minutes, la durée de fonctionnement depuis le dernier démarrage, l'utilisation du _central processing unit_ (CPU) et de la mémoire. D'autre part, elle affiche également la liste des processus en cours. Pour chaque processus, `top` indique notamment l’identifiant (PID), l’utilisateur, la priorité, le pourcentage de CPU et de mémoire utilisés, le temps total d’exécution et la commande qui l’a lancé.
 
 
-<div style="text-align: center;">
+<div align="center">
   <img src="../assets/top-command.png" alt="Figure 7">
   <br>
   <em>Figure 7. Résultat de sortie de la commande top</em>
